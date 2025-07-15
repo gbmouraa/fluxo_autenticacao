@@ -6,7 +6,7 @@ export const Header = () => {
     <header className="px-3 pt-5">
       <Link to="/" className="hidden items-center gap-x-1 sm:flex">
         <SiAuthelia size={24} />
-        <span className="text-xl font-medium">Auth</span>
+        <span className="text-xl font-medium tracking-wide">Auth</span>
       </Link>
     </header>
   );
