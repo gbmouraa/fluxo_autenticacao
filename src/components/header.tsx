@@ -3,7 +3,7 @@ import { SiAuthelia } from "react-icons/si";
 
 export const Header = () => {
   return (
-    <header className="p-3">
+    <header className="px-3 pt-5">
       <Link to="/" className="hidden items-center gap-x-1 sm:flex">
         <SiAuthelia size={24} />
         <span className="text-xl font-medium">Auth</span>

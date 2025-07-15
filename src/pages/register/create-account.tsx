@@ -7,7 +7,7 @@ import { Container } from "../../components/container";
 import { Input } from "../../components/input";
 
 const schema = z.object({
-  email: z.email("Insira um email válido").nonempty("Preencha seu email"),
+  email: z.email("O email não válido").nonempty("Preencha seu email"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -17,7 +17,7 @@ export const CreateAccount = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onChange" });
+  } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onSubmit" });
 
   return (
     <Container>
@@ -26,13 +26,14 @@ export const CreateAccount = () => {
         <span className="text-xl font-medium">Auth</span>
       </Link>
       <h1 className="text-3xl font-semibold">Criar conta</h1>
-      <form>
+      <form className="mt-7 w-full">
         <fieldset>
           <Input
             type="text"
             placeholder="Endereço de email"
             name="email"
             register={register}
+            error={errors.email?.message}
           />
         </fieldset>
       </form>
