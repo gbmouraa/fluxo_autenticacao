@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { AuthContext } from "../../contexts/auth-context";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
 import { SiAuthelia } from "react-icons/si";
 import { Container } from "../../components/container";
 import { Input } from "../../components/input";
@@ -25,10 +25,13 @@ export const CreateAccount = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onSubmit" });
 
+  const navigate = useNavigate();
+
   const { handleChangeEmail } = useContext(AuthContext);
 
   const onSubmit = ({ email }: FormData) => {
     handleChangeEmail(email);
+    navigate("/create-account/password");
   };
 
   return (
