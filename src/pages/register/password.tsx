@@ -35,7 +35,9 @@ export const Password = () => {
           <span className="text-xl font-medium">Auth</span>
         </Link>
         <h1 className="text-3xl">Criar conta</h1>
-        <p className="mt-3 text-gray-600">Crie uma senha para continuar</p>
+        <p className="mt-3 text-center text-gray-600">
+          Crie uma senha para continuar
+        </p>
         <form className="mt-7 w-full" onSubmit={handleSubmit(onSubmit)}>
           <fieldset>
             <EmailPreview />
