@@ -23,8 +23,11 @@ export const Password = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onChange" });
 
+  const { createAccountWithEmailAndPassword, email, loading } =
+    useContext(AuthContext);
+
   const onSubmit = ({ password }: FormData) => {
-    // TODO: Pegar email do contexto e criar conta no firebase
+    createAccountWithEmailAndPassword(email, password);
   };
 
   return (
@@ -60,14 +63,22 @@ export const Password = () => {
               </ul>
             </div>
           )}
-          <button className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80">
-            Continuar
+          <button
+            className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="mx-auto h-6 w-6 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+            ) : (
+              "Continuar"
+            )}
           </button>
         </form>
         <div className="mt-7 w-full">
           <p className="text-center">
             Já possui uma conta?{" "}
-            <Link to="/login" className="text-blue-600 hover:underline">
+            <Link to="/sign-in" className="text-blue-600 hover:underline">
               Entrar
             </Link>
           </p>

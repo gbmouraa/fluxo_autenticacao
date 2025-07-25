@@ -59,7 +59,7 @@ export const CreateAccount = () => {
         <div className="mt-7 w-full">
           <p className="text-center">
             Já possui uma conta?{" "}
-            <Link to="/login" className="text-blue-600 hover:underline">
+            <Link to="/sign-in" className="text-blue-600 hover:underline">
               Entrar
             </Link>
           </p>
