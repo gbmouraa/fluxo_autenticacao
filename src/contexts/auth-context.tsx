@@ -1,16 +1,18 @@
 import { createContext } from "react";
 
 export type User = {
-  email: string;
-  uid: string;
+  email: string | null;
+  uid: string | null;
   emailVerified: boolean;
+  signed: boolean;
 };
 
 type AuthContextValue = {
-  user: User | null;
+  user: User;
   email: string;
-  signed: boolean;
+  loading: boolean;
   createAccountWithEmailAndPassword: (email: string, password: string) => void;
+  signIn: (email: string, password: string) => void;
   handleChangeEmail: (email: string) => void;
   handleChangeUser: (user: User) => void;
 };
