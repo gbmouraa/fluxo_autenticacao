@@ -43,6 +43,7 @@ export const Input = ({
         {password && (
           <button
             className="absolute top-1/2 right-5 z-30 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-600"
+            type="button"
             onClick={() => setPassWordVisible(!passwordVisible)}
           >
             {passwordVisible ? <IoMdEyeOff /> : <IoMdEye />}
