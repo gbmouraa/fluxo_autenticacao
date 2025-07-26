@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           emailVerified: false,
           signed: true,
         });
+
         sendEmailVerification(user.user);
         navigate("/email-verification");
       })
