@@ -1,11 +1,11 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth-context";
 import { auth } from "../services/firebase-connection";
 import {
   createUserWithEmailAndPassword,
-  sendEmailVerification,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import type { User } from "./auth-context";
 import toast from "react-hot-toast";
@@ -22,12 +22,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     emailVerified: false,
     signed: false,
   });
+
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
 
-  // TODO: usar useEffect para verificar se há usuário
-  // logado para fazer o redirecionamento
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (userCredentials) => {
+      if (!userCredentials) {
+        setUser({
+          email: null,
+          uid: null,
+          emailVerified: false,
+          signed: false,
+        });
+        return;
+      }
+
+      setUser({
+        email: userCredentials.email,
+        uid: userCredentials.uid,
+        emailVerified: userCredentials.emailVerified,
+        signed: true,
+      });
+
+      if (!userCredentials.emailVerified) {
+        navigate("/email-verification");
+        return;
+      }
+
+      navigate("/dashboard");
+    });
+
+    return () => unsub();
+  }, [navigate]);
 
   const handleChangeEmail = (email: string) => {
     setEmail(email);
@@ -52,7 +80,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           signed: true,
         });
 
-        sendEmailVerification(user.user);
         navigate("/email-verification");
       })
       .catch((error) => {
