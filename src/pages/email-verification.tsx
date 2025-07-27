@@ -16,6 +16,12 @@ export const EmailVerification = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (auth.currentUser) {
+      sendEmailVerification(auth.currentUser);
+    }
+  }, []);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout;
 
     if (!isButtonActive) {
@@ -83,8 +89,7 @@ export const EmailVerification = () => {
         </Link>
         <h1 className="text-3xl">Verifique seu email</h1>
         <p className="mt-3 text-center text-gray-600">
-          Verifique seu email através do link que enviamos para
-          {user?.email}
+          Verifique seu email através do link que enviamos para {user?.email}
         </p>
         {!isButtonActive && (
           <p className="mt-4 text-gray-600">
