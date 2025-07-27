@@ -7,6 +7,7 @@ import { Header } from "../components/header";
 import { Container } from "../components/container";
 import { Dashboard } from "../pages/dashboard";
 import { SignInPassword } from "../pages/login/sign-in-password";
+import { Private } from "./private";
 
 export const AppRouter = () => {
   return (
@@ -18,9 +19,23 @@ export const AppRouter = () => {
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/create-account/password" element={<Password />} />
           <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/email-verification" element={<EmailVerification />} />
+          <Route
+            path="/email-verification"
+            element={
+              <Private>
+                <EmailVerification />
+              </Private>
+            }
+          />
           <Route path="/sign-in/password" element={<SignInPassword />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+              <Private>
+                <Dashboard />
+              </Private>
+            }
+          />
         </Routes>
       </Container>
     </div>
