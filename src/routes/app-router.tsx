@@ -8,6 +8,7 @@ import { Container } from "../components/container";
 import { Dashboard } from "../pages/dashboard";
 import { SignInPassword } from "../pages/login/sign-in-password";
 import { Private } from "./private";
+import { ResetPassword } from "../pages/login/reset-password";
 
 export const AppRouter = () => {
   return (
@@ -36,6 +37,7 @@ export const AppRouter = () => {
               </Private>
             }
           />
+          <Route path="/sign-in/reset-password" element={<ResetPassword />} />
         </Routes>
       </Container>
     </div>
