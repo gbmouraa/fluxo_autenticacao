@@ -56,7 +56,10 @@ export const SignInPassword = () => {
               password
             />
           </fieldset>
-          <Link to="/" className="mt-3 block text-blue-600 hover:underline">
+          <Link
+            to="/sign-in/reset-password"
+            className="mt-3 block text-blue-600 hover:underline"
+          >
             Esqueceu sua senha?
           </Link>
           <button
@@ -73,9 +76,9 @@ export const SignInPassword = () => {
         </form>
         <div className="mt-7 w-full">
           <p className="text-center">
-            Já possui uma conta?{" "}
+            Ainda não possui uma conta?{" "}
             <Link to="/login" className="text-blue-600 hover:underline">
-              Entrar
+              Cadastre-se
             </Link>
           </p>
         </div>
