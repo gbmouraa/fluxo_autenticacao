@@ -5,6 +5,7 @@ export type User = {
   uid: string | null;
   emailVerified: boolean;
   signed: boolean;
+  loginMethod: string | null;
 };
 
 type AuthContextValue = {

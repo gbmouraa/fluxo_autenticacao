@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     uid: null,
     emailVerified: false,
     signed: false,
+    loginMethod: null,
   });
 
   const [email, setEmail] = useState("");
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           uid: null,
           emailVerified: false,
           signed: false,
+          loginMethod: null,
         });
         return;
       }
@@ -44,6 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         uid: userCredentials.uid,
         emailVerified: userCredentials.emailVerified,
         signed: true,
+        loginMethod: "Email/senha",
       });
 
       if (!userCredentials.emailVerified) {
@@ -78,6 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           uid: user.user.uid,
           emailVerified: false,
           signed: true,
+          loginMethod: "Email/senha",
         });
 
         navigate("/email-verification");
@@ -102,6 +106,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           uid: userCredentials.uid,
           emailVerified: userCredentials.emailVerified,
           signed: true,
+          loginMethod: "Email/senha",
         });
         navigate("/dashboard");
       })
