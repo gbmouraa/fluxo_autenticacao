@@ -9,6 +9,7 @@ import { Dashboard } from "../pages/dashboard";
 import { SignInPassword } from "../pages/login/sign-in-password";
 import { Private } from "./private";
 import { ResetPassword } from "../pages/login/reset-password";
+import { ChangePassword } from "../pages/change-password";
 
 export const AppRouter = () => {
   return (
@@ -38,6 +39,14 @@ export const AppRouter = () => {
             }
           />
           <Route path="/sign-in/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/dashboard/change-password"
+            element={
+              <Private>
+                <ChangePassword />
+              </Private>
+            }
+          />
         </Routes>
       </Container>
     </div>
