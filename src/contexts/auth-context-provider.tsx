@@ -48,17 +48,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         signed: true,
         loginMethod: "Email/senha",
       });
-
-      if (!userCredentials.emailVerified) {
-        navigate("/email-verification");
-        return;
-      }
-
-      navigate("/dashboard");
     });
 
     return () => unsub();
-  }, [navigate]);
+  }, []);
 
   const handleChangeEmail = (email: string) => {
     setEmail(email);

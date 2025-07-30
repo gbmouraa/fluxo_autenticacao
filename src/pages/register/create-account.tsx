@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../contexts/auth-context";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,7 +27,14 @@ export const CreateAccount = () => {
 
   const navigate = useNavigate();
 
-  const { handleChangeEmail } = useContext(AuthContext);
+  const {
+    handleChangeEmail,
+    user: { signed },
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (signed) navigate("/dashboard");
+  }, [navigate, signed]);
 
   const onSubmit = ({ email }: FormData) => {
     handleChangeEmail(email);

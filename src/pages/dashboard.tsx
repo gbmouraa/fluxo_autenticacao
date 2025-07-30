@@ -17,7 +17,7 @@ export const Dashboard = () => {
     if (!user.emailVerified) {
       navigate("/email-verification");
     }
-  }, [navigate, user.emailVerified]);
+  }, [navigate, user.emailVerified, user]);
 
   const logOut = async () => {
     setLoading(true);
@@ -52,7 +52,7 @@ export const Dashboard = () => {
         <span>Você está logado com {user.loginMethod}</span>
         <span>Email: {user.email}</span>
         <Link
-          to="dashboard/change-password"
+          to="/dashboard/change-password"
           className="text-blue-600 hover:underline"
         >
           Alterar senha

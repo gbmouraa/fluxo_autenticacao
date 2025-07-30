@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../contexts/auth-context";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -25,8 +25,18 @@ export const SignIn = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onSubmit" });
 
-  const { handleChangeEmail } = useContext(AuthContext);
+  const {
+    handleChangeEmail,
+    user: { signed },
+  } = useContext(AuthContext);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (signed) {
+      navigate("/dashboard");
+    }
+  }, [navigate, signed]);
 
   const onSubmit = ({ email }: FormData) => {
     handleChangeEmail(email);
