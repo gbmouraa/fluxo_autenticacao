@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useTransition } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +8,6 @@ import { SiAuthelia } from "react-icons/si";
 import { Footer } from "../components/footer";
 import { Input } from "../components/input";
 import { auth } from "../services/firebase-connection";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import {
   EmailAuthProvider,
@@ -32,9 +32,11 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export const ChangePassword = () => {
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const currentUser = auth.currentUser;
+
+  const [isPending, startTransition] = useTransition();
 
   const {
     handleSubmit,
@@ -44,37 +46,35 @@ export const ChangePassword = () => {
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onChange" });
 
   const onSubmit = async (FormData: FormData) => {
-    setLoading(true);
-
     if (!currentUser) {
       toast.error("Não foi possível alterar a senha, tente mais tarde.");
-      setLoading(false);
       return;
     }
 
-    try {
-      const credential = EmailAuthProvider.credential(
-        currentUser.email!,
-        FormData.currentPassword,
-      );
+    startTransition(async () => {
+      try {
+        const credential = EmailAuthProvider.credential(
+          currentUser.email!,
+          FormData.currentPassword,
+        );
 
-      await reauthenticateWithCredential(currentUser, credential);
-      console.log("Usuário reautenticado com sucesso");
+        await reauthenticateWithCredential(currentUser, credential);
+        console.log("Usuário reautenticado com sucesso");
 
-      await updatePassword(currentUser, FormData.newPassword);
-      console.log("Senha alterada com sucesso!");
-      toast.success("Senha alterada com sucesso!");
-      reset();
-    } catch (error: any) {
-      if (error.code === "auth/wrong-password") {
-        toast.error("A senha atual está incorreta");
-      } else {
-        toast.error("Erro ao alterar senha");
-        console.log("Erro ao alterar senha:", error);
+        await updatePassword(currentUser, FormData.newPassword);
+        console.log("Senha alterada com sucesso!");
+        toast.success("Senha alterada com sucesso!");
+        reset();
+        navigate("/dashboard");
+      } catch (error: any) {
+        if (error.code === "auth/wrong-password") {
+          toast.error("A senha atual está incorreta");
+        } else {
+          toast.error("Erro ao alterar senha");
+          console.log("Erro ao alterar senha:", error);
+        }
       }
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
@@ -115,9 +115,9 @@ export const ChangePassword = () => {
           <button
             className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
             type="submit"
-            disabled={loading}
+            disabled={isPending}
           >
-            {loading ? (
+            {isPending ? (
               <div className="mx-auto h-6 w-6 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
             ) : (
               "Continuar"
@@ -125,7 +125,7 @@ export const ChangePassword = () => {
           </button>
           <Link
             to="/dashboard"
-            className={`mt-6 inline-block w-full text-center hover:underline ${loading && "pointer-events-none opacity-70"}`}
+            className={`mt-6 inline-block w-full text-center hover:underline ${isPending && "pointer-events-none opacity-70"}`}
           >
             Voltar
           </Link>
