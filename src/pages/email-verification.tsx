@@ -1,23 +1,27 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/auth-context";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Container } from "../components/container";
 import { SiAuthelia } from "react-icons/si";
 import { Footer } from "../components/footer";
 import { sendEmailVerification } from "firebase/auth";
 import { auth } from "../services/firebase-connection";
-import toast from "react-hot-toast";
 
 export const EmailVerification = () => {
   const [seconds, setSeconds] = useState(60);
   const [isButtonActive, setIsButtonActive] = useState(false);
+  const [emailHasVerified, setEmailHasVerified] = useState(false);
 
   const { handleChangeUser, user } = useContext(AuthContext);
-  const navigate = useNavigate();
+
+  const actionCodeSettings = {
+    url: "https://fluxo-autenticacao-eta.vercel.app/dashboard",
+    handleCodeInApp: true,
+  };
 
   useEffect(() => {
     if (auth.currentUser) {
-      sendEmailVerification(auth.currentUser);
+      sendEmailVerification(auth.currentUser, actionCodeSettings);
     }
   }, []);
 
@@ -41,36 +45,34 @@ export const EmailVerification = () => {
   }, [isButtonActive]);
 
   useEffect(() => {
-    if (!auth.currentUser) {
-      return;
-    }
+    if (!auth.currentUser || auth.currentUser.emailVerified) return;
 
     const interval = setInterval(async () => {
       await auth.currentUser?.reload();
-      console.log("Aguardando verificação de email...");
 
       if (auth.currentUser?.emailVerified) {
-        clearInterval(interval);
+        setEmailHasVerified(true);
 
         handleChangeUser({
           ...user,
           emailVerified: true,
         });
 
+        clearInterval(interval);
         console.log("Email verificado");
-        toast.success("Email verificado com sucesso.");
-        navigate("/dashboard");
       }
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [handleChangeUser, user, navigate]);
+  }, [handleChangeUser, user]);
 
   const resendEmail = async () => {
     if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser).then(() => {
-        console.log("Email de verificação reenviado.");
-      });
+      await sendEmailVerification(auth.currentUser, actionCodeSettings).then(
+        () => {
+          console.log("Email de verificação reenviado.");
+        },
+      );
       setSeconds(60);
       setIsButtonActive(false);
     }
@@ -87,22 +89,32 @@ export const EmailVerification = () => {
           <SiAuthelia size={24} />
           <span className="text-xl font-medium">Auth</span>
         </Link>
-        <h1 className="text-3xl">Verifique seu email</h1>
-        <p className="mt-3 text-center text-gray-600">
-          Verifique seu email através do link que enviamos para {user?.email}
-        </p>
-        {!isButtonActive && (
-          <p className="mt-4 text-gray-600">
-            Enviar novamente em {seconds} segundos
-          </p>
+        {emailHasVerified ? (
+          <div className="text-center">
+            <h1 className="text-3xl">Sucesso</h1>
+            <p className="mt-3">Seu email foi verificado ✅</p>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-3xl">Verifique seu email</h1>
+            <p className="mt-3 text-center text-gray-600">
+              Verifique seu email através do link que enviamos para{" "}
+              {user?.email}
+            </p>
+            {!isButtonActive && (
+              <p className="mt-4 text-gray-600">
+                Enviar novamente em {seconds} segundos
+              </p>
+            )}
+            <button
+              className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:bg-gray-300"
+              disabled={!isButtonActive}
+              onClick={resendEmail}
+            >
+              Reenviar email
+            </button>
+          </>
         )}
-        <button
-          className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:bg-gray-300"
-          disabled={!isButtonActive}
-          onClick={resendEmail}
-        >
-          Reenviar email
-        </button>
       </Container>
       <Footer />
     </>
