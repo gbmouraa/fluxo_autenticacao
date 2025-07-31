@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useTransition } from "react";
 import { AuthContext } from "../../contexts/auth-context";
 import { Input } from "../../components/input";
 import { z } from "zod";
@@ -23,10 +23,14 @@ export const SignInPassword = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onChange" });
 
-  const { loading, email, signIn } = useContext(AuthContext);
+  const [isPending, startTransition] = useTransition();
+
+  const { email, signIn } = useContext(AuthContext);
 
   const onSubmit = ({ password }: FormData) => {
-    signIn(email, password);
+    startTransition(async () => {
+      signIn(email, password);
+    });
   };
 
   if (!email) {
@@ -65,9 +69,9 @@ export const SignInPassword = () => {
           <button
             className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
             type="submit"
-            disabled={loading}
+            disabled={isPending}
           >
-            {loading ? (
+            {isPending ? (
               <div className="mx-auto h-6 w-6 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
             ) : (
               "Continuar"

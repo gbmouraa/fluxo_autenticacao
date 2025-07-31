@@ -11,7 +11,6 @@ export type User = {
 type AuthContextValue = {
   user: User;
   email: string;
-  loading: boolean;
   createAccountWithEmailAndPassword: (email: string, password: string) => void;
   signIn: (email: string, password: string) => void;
   handleChangeEmail: (email: string) => void;

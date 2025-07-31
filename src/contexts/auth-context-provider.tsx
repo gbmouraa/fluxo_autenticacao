@@ -15,7 +15,6 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User>({
     email: null,
     uid: null,
@@ -65,8 +64,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     email: string,
     password: string,
   ) => {
-    setLoading(true);
-
     await createUserWithEmailAndPassword(auth, email, password)
       .then((user) => {
         setUser({
@@ -82,14 +79,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .catch((error) => {
         console.error("Erro ao cria conta: ", error);
         toast.error("Erro ao criar conta, tente novamente.");
-      })
-      .finally(() => setLoading(false));
+      });
   };
 
   // função para fazer login com email e senha
   const signIn = async (email: string, password: string) => {
-    setLoading(true);
-
     await signInWithEmailAndPassword(auth, email, password)
       .then((user) => {
         const userCredentials = user.user;
@@ -106,16 +100,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .catch((error) => {
         console.error("Não foi possível fazer seu login: ", error.message);
         toast.error("Erro ao fazer login, tente novamente.");
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        loading,
         email,
         handleChangeEmail,
         user,

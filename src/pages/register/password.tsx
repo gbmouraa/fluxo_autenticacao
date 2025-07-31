@@ -1,3 +1,4 @@
+import { useTransition } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,11 +24,14 @@ export const Password = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema), mode: "onChange" });
 
-  const { createAccountWithEmailAndPassword, email, loading } =
-    useContext(AuthContext);
+  const [isPending, startTransition] = useTransition();
 
-  const onSubmit = ({ password }: FormData) => {
-    createAccountWithEmailAndPassword(email, password);
+  const { createAccountWithEmailAndPassword, email } = useContext(AuthContext);
+
+  const onSubmit = async ({ password }: FormData) => {
+    startTransition(async () => {
+      createAccountWithEmailAndPassword(email, password);
+    });
   };
 
   return (
@@ -66,9 +70,9 @@ export const Password = () => {
           <button
             className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
             type="submit"
-            disabled={loading}
+            disabled={isPending}
           >
-            {loading ? (
+            {isPending ? (
               <div className="mx-auto h-6 w-6 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
             ) : (
               "Continuar"
