@@ -31,6 +31,7 @@ export const CreateAccount = () => {
     handleChangeEmail,
     user: { signed },
     signWithGoogleAccount,
+    signWithMicrosoftAccount,
   } = useContext(AuthContext);
 
   useEffect(() => {
@@ -86,7 +87,10 @@ export const CreateAccount = () => {
               <img src={googleLogo} alt="Logo do Google" className="w-4" />
               Continuar com Google
             </button>
-            <button className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60">
+            <button
+              className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60"
+              onClick={signWithMicrosoftAccount}
+            >
               <img
                 src={microsoftLogo}
                 alt="Logo da Microsoft"

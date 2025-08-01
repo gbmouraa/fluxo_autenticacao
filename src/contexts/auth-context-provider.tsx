@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  OAuthProvider,
 } from "firebase/auth";
 import type { User } from "./auth-context";
 import toast from "react-hot-toast";
@@ -90,13 +91,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const result = await signInWithPopup(auth, provider);
 
-      handleChangeUser({
+      setUser({
         email: result.user.email,
         uid: result.user.uid,
         // não é feito a validação de email
         emailVerified: true,
         signed: true,
         loginMethod: "Conta Google",
+      });
+
+      navigate("/dashboard");
+
+      console.log("Usuário logado com sucesso");
+    } catch (err: any) {
+      console.log("Não foi possível fazer login:", err);
+      toast.error("Erro ao fazer login, tente novamente mais tarde");
+    }
+  };
+
+  const signWithMicrosoftAccount = async () => {
+    const provider = new OAuthProvider("microsoft.com");
+    provider.addScope("email");
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      setUser({
+        email: result.user.email,
+        uid: result.user.uid,
+        // não é feito a validação de email
+        emailVerified: true,
+        signed: true,
+        loginMethod: "Conta Microsoft",
       });
 
       navigate("/dashboard");
@@ -139,6 +165,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         createAccountWithEmailAndPassword,
         signIn,
         signWithGoogleAccount,
+        signWithMicrosoftAccount,
       }}
     >
       {children}

@@ -16,6 +16,7 @@ type AuthContextValue = {
   handleChangeEmail: (email: string) => void;
   handleChangeUser: (user: User) => void;
   signWithGoogleAccount: () => void;
+  signWithMicrosoftAccount: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextValue);
