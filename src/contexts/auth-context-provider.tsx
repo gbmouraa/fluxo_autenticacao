@@ -6,6 +6,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import type { User } from "./auth-context";
 import toast from "react-hot-toast";
@@ -82,6 +84,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
   };
 
+  const signWithGoogleAccount = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      handleChangeUser({
+        email: result.user.email,
+        uid: result.user.uid,
+        // não é feito a validação de email
+        emailVerified: true,
+        signed: true,
+        loginMethod: "Conta Google",
+      });
+
+      navigate("/dashboard");
+
+      console.log("Usuário logado com sucesso");
+    } catch (err: any) {
+      console.log("Não foi possível fazer login:", err);
+      toast.error("Erro ao fazer login, tente novamente mais tarde");
+    }
+  };
+
   // função para fazer login com email e senha
   const signIn = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password)
@@ -104,7 +130,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider
+    <AuthContext
       value={{
         email,
         handleChangeEmail,
@@ -112,9 +138,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         handleChangeUser,
         createAccountWithEmailAndPassword,
         signIn,
+        signWithGoogleAccount,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 };

@@ -30,6 +30,7 @@ export const CreateAccount = () => {
   const {
     handleChangeEmail,
     user: { signed },
+    signWithGoogleAccount,
   } = useContext(AuthContext);
 
   useEffect(() => {
@@ -78,7 +79,10 @@ export const CreateAccount = () => {
             <div className="h-px w-full bg-gray-200"></div>
           </div>
           <div className="mt-6 space-y-3">
-            <button className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60">
+            <button
+              className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60"
+              onClick={signWithGoogleAccount}
+            >
               <img src={googleLogo} alt="Logo do Google" className="w-4" />
               Continuar com Google
             </button>
