@@ -98,10 +98,13 @@ export const CreateAccount = () => {
               />
               Continuar com Microsoft
             </button>
-            <button className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60">
+            <Link
+              to="/sign-in-with-phone"
+              className="flex h-[50px] w-full cursor-pointer items-center gap-x-3 rounded-full border border-gray-300 px-5 transition-colors hover:bg-gray-200/60"
+            >
               <img src={phoneIcon} alt="Icone telefone" className="w-[20px]" />
               Continuar com telefone
-            </button>
+            </Link>
           </div>
         </div>
       </Container>

@@ -51,12 +51,14 @@ export const Dashboard = () => {
         </Link>
         <span>Você está logado com {user.loginMethod}</span>
         <span>Email: {user.email}</span>
-        <Link
-          to="/dashboard/change-password"
-          className="text-blue-600 hover:underline"
-        >
-          Alterar senha
-        </Link>
+        {user.loginMethod === "Email/senha" && (
+          <Link
+            to="/dashboard/change-password"
+            className="text-blue-600 hover:underline"
+          >
+            Alterar senha
+          </Link>
+        )}
         <button
           className="mt-7 h-[50px] w-full cursor-pointer rounded-full bg-black text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
           onClick={logOut}
